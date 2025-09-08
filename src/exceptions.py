@@ -1,5 +1,6 @@
 # This code will help us to create the custom exceptions
 import sys
+from src.logger import logging
 
 def error_message_details(error_code,error_details:sys):
         # this error data will contain the file name, line number, and what is error
@@ -22,4 +23,5 @@ if __name__ == "__main__":
         try:
                 a = 1/0
         except Exception as e:
+                logging.info("Divided by zero")
                 raise CustomException(e,sys)

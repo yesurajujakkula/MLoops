@@ -3,3 +3,5 @@ Name: MLOOPs
 Version: 0.0.1
 Requires-Dist: pandas
 Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
