@@ -1,4 +1,5 @@
 .venv
 mloops
 .mloops
-.artifacts
+.artifacts/
+artifacts/

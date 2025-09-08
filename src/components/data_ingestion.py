@@ -5,6 +5,7 @@ from src.logger import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformerClass
 #import logging
 
 # creating the data ingestion config which will create all the required paths
@@ -29,9 +30,9 @@ class DataIngestionClass:
                         logging.info("Splitting the data to train test datas")
                         train_data, test_data = train_test_split(df,test_size=0.2,random_state=42)
                         os.makedirs(os.path.dirname(self.arti_data_path.train_data_path),exist_ok=True)
-                        train_data.to_csv(self.arti_data_path.train_data_path)
+                        train_data.to_csv(self.arti_data_path.train_data_path,index=False,header=True)
                         os.makedirs(os.path.dirname(self.arti_data_path.test_data_path),exist_ok=True)
-                        test_data.to_csv(self.arti_data_path.test_data_path)
+                        test_data.to_csv(self.arti_data_path.test_data_path,index=False,header=True)
                         return (
                                 self.arti_data_path.data_path,
                                 self.arti_data_path.train_data_path,
@@ -42,4 +43,6 @@ class DataIngestionClass:
                 
 if __name__ == "__main__":
         obj = DataIngestionClass()
-        obj.ingestion_func()
+        data_path,train_path,test_path = obj.ingestion_func()
+        data_transfer_obj = DataTransformerClass()
+        data_transfer_obj.initiate_data_transformer(train_path,test_path)
