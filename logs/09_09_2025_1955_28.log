@@ -1,0 +1,9 @@
+[ 2025-09-09 19:55:29,719] 160 numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+[ 2025-09-09 19:55:35,094] 24 root - INFO - Data ingestion started
+[ 2025-09-09 19:55:35,140] 31 root - INFO - Splitting the data to train test datas
+[ 2025-09-09 19:55:35,184] 28 root - INFO - data transformation preprocessor started
+[ 2025-09-09 19:55:35,184] 60 root - INFO - data transformation started
+[ 2025-09-09 19:55:35,184] 66 root - INFO - applying preprocessing on both training and testing dataframes
+[ 2025-09-09 19:55:35,200] 55 root - INFO - model trainer initiated
+[ 2025-09-09 19:55:35,200] 31 root - INFO - model eveluvation started to choose the best model for our data
+[ 2025-09-09 19:55:52,579] 119 root - INFO - best model found for our dataset

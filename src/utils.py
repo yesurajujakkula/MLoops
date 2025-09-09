@@ -36,3 +36,11 @@ def select_best_model(report):
                         best_r2 = r2
                         best_mae = mae
         return best_model,best_r2
+
+
+def load_object(file_path):
+        try:
+                with open(file_path, "rb") as f:   # 'rb' = read in binary mode
+                        return dill.load(f)
+        except Exception as e:
+                raise CustomException(e,sys)
