@@ -16,7 +16,7 @@ from src.utils import save_file
 
 @dataclass
 class DataTranformationConfig:
-        preprocessor_obj_file_path  = os.path.join("artifacts","preprocess.pkl")
+        preprocessor_obj_file_path:str  = os.path.join("artifacts","preprocess.pkl")
 
 class DataTransformerClass:
         def __init__(self):
@@ -55,7 +55,6 @@ class DataTransformerClass:
         def initiate_data_transformer(self,train_data,test_data):
                 try:
                         train_df = pd.read_csv(train_data)
-                        print(train_df.head())
                         test_df = pd.read_csv(test_data)
                         preprocessor_obj = self.data_transfer_func()
                         logging.info("data transformation started")

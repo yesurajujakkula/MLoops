@@ -6,14 +6,15 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformerClass
+from src.components.model_trainer import ModelTraining
 #import logging
 
 # creating the data ingestion config which will create all the required paths
 @dataclass
 class DataIngestionClassConfig:
-        data_path = os.path.join("artifacts","data.csv")
-        train_data_path = os.path.join("artifacts","train.csv")
-        test_data_path = os.path.join("artifacts","test.csv")
+        data_path:str = os.path.join("artifacts","data.csv")
+        train_data_path:str = os.path.join("artifacts","train.csv")
+        test_data_path:str = os.path.join("artifacts","test.csv")
 
 class DataIngestionClass:
         def __init__(self):
@@ -45,4 +46,7 @@ if __name__ == "__main__":
         obj = DataIngestionClass()
         data_path,train_path,test_path = obj.ingestion_func()
         data_transfer_obj = DataTransformerClass()
-        data_transfer_obj.initiate_data_transformer(train_path,test_path)
+        train_arr,test_arr, _ = data_transfer_obj.initiate_data_transformer(train_path,test_path)
+        ModelTraining_obj = ModelTraining()
+        best_model,best_r2 = ModelTraining_obj.initiate_model_trainer(train_arr,test_arr)
+
