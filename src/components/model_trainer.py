@@ -22,17 +22,21 @@ from dataclasses import dataclass
 
 @dataclass
 class ModelTraininigConfig:
-        training_pickle_path:str = os.path.join("ärtifacts","model.pkl")
+        training_pickle_path:str = os.path.join("artifacts","model.pkl")
 
 class ModelTraining:
         def __init__(self):
                 self.pickle_path = ModelTraininigConfig()
-        def evaluvate_models_func(self,x_train,y_train,x_test,y_test,models):
+        def evaluvate_models_func(self,x_train,y_train,x_test,y_test,models,params):
                 logging.info("model eveluvation started to choose the best model for our data")
                 report = {}
                 try:
                         for model_name, model_func in models.items():
                                 report[model_name] = {}
+                                model_params = params[model_name]
+                                gs = RandomizedSearchCV(model_func,model_params,cv=3)
+                                gs.fit(x_train,y_train)
+                                model_func.set_params(**gs.best_params_)
                                 # feeding both train set and test set to the model
                                 # training the model
                                 model_func.fit(x_train,y_train)
@@ -66,7 +70,48 @@ class ModelTraining:
                                         "CatBoosting Regressor": CatBoostRegressor(verbose=False),
                                         "Linear Regression": LinearRegression(),
                                         }
-                        model_reports = self.evaluvate_models_func(x_train,y_train,x_test,y_test,models)
+                        params={
+                                "Lasso": {
+                                        'alpha': [0.001, 0.01, 0.1, 1.0, 10.0],   # Regularization strength
+                                        'max_iter': [1000, 5000, 10000],          # Iterations for convergence
+                                        'tol': [1e-3, 1e-4, 1e-5]                 # Tolerance
+                                },
+
+                                "Ridge": {
+                                        'alpha': [0.01, 0.1, 1.0, 10.0, 100.0],   # Regularization strength
+                                        'solver': ['auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'saga']
+                                },
+
+                                "K-Neighbors Regressor": {
+                                        'n_neighbors': [3, 5, 7, 9, 11],          # Number of neighbors
+                                        'weights': ['uniform', 'distance'],       # How weights are applied
+                                        'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
+                                        'p': [1, 2]                               # Distance metric (1=Manhattan, 2=Euclidean)
+                                },
+                                "Decision Tree": {
+                                'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                                # 'splitter':['best','random'],
+                                # 'max_features':['sqrt','log2'],
+                                },
+                                "Random Forest Regressor":{
+                                # 'criterion':['squared_error', 'friedman_mse', 'absolute_error', 'poisson'],
+                                
+                                # 'max_features':['sqrt','log2',None],
+                                'n_estimators': [8,16,32,64,128,256]
+                                },
+                                "Linear Regression":{},
+                                "XGBRegressor":{
+                                'learning_rate':[.1,.01,.05,.001],
+                                'n_estimators': [8,16,32,64,128,256]
+                                },
+                                "CatBoosting Regressor":{
+                                'depth': [6,8,10],
+                                'learning_rate': [0.01, 0.05, 0.1],
+                                'iterations': [30, 50, 100]
+                                }
+                                
+                        }
+                        model_reports = self.evaluvate_models_func(x_train,y_train,x_test,y_test,models,params=params)
                         best_model,best_r2 = utils.select_best_model(model_reports)
                         best_model_var= models[best_model[0]]
                         if best_r2 < 0.8:
